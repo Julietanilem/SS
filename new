@@ -40,9 +40,11 @@ def main():
     upperYellow = color_hsv[0][0][0] + 10, 255, 255
     print("lower{}".format(lowerYellow))
     print("upper{}".format(upperYellow))
+
     #Generados 
     lowerYellow = np.array([lowerYellow[0], lowerYellow[1], lowerYellow[2]])
     upperYellow= np.array([upperYellow[0], upperYellow[1], upperYellow[2]])
+
     #De la función
     #upperYellow = np.array([90, 255, 255])
     #lowerYellow= np.array([90, 245, 255])
@@ -50,15 +52,8 @@ def main():
     #upperYellow = np.array([35, 255, 255])
     #lowerYellow= np.array([4, 122, 5])
     #Intento con dos colores rgb
-    color_rgb2=np.uint8([[[255,255,1]]])
-    
-    color_hsv2 = cv.cvtColor(color_rgb2,cv.COLOR_BGR2HSV)
-    print("color:{}".format(color_hsv2))
-    lowerYellow=color_hsv
-    upperYellow=color_hsv2
-    yellow_lower = np.array([20, 100, 100])
-    yellow_upper = np.array([30, 255, 255])
-    
+    yellow_lower = np.array([20, 100, 5])
+    yellow_upper = np.array([35, 255, 255])
    
 
     print(lowerYellow)
@@ -66,20 +61,19 @@ def main():
         if imgExist==True:
             hsv = cv.cvtColor(image,cv.COLOR_BGR2HSV)
             mask_yellow = cv.inRange(hsv, yellow_lower, yellow_upper)
-            yellowPixelsDetected =  cv.bitwise_and(image, image, mask=mask_yellow)
+            yellowPixelsDetected =  cv.bitwise_and(hsv, hsv, mask=mask_yellow)
             cv.imshow("Vista amarillos", yellowPixelsDetected)
             print(yellowPixelsDetected)
             xCount = 0
             yCount=0
             colorPixelsCount=0
-        """
+
             for  x in range(yellowPixelsDetected.shape[0]):
                 for y in range(yellowPixelsDetected.shape[1]):  
                     if yellowPixelsDetected[x,y] == 255:
                         yCount+=x
                         xCount+=y
                         colorPixelsCount+=1
-
             if colorPixelsCount>20:              
                 centerX= int(xCount/colorPixelsCount)
                 centerY= int (yCount/colorPixelsCount)
@@ -89,14 +83,13 @@ def main():
             else:
                 centroid = [0, 0,0]
                 print("No hay pixeles amarillos")
-
             cv.imshow("Vista amarillos", yellowPixelsDetected)
             cv.imshow("Vista normal", image)
             cv.waitKey(1)
             myArray.data = centroid
             pub_centroid.publish(myArray)
             print (centroid)
-        """
+    
 
         loop.sleep()
 
@@ -105,3 +98,4 @@ if __name__ == '__main__':
         main()
     except rospy.ROSInterruptException:
         pass
+    
